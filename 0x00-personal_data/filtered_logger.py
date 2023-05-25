@@ -75,3 +75,23 @@ def get_db() -> mysql.connector.connection.MySQLConnection:
     database = getenv("PERSONAL_DATA_DB_NAME")
     return mysql.connector.connect(user=name, host=host,
                                    database=database, password=password)
+
+
+def main():
+    """The engine of this module"""
+    db = get_db()
+    cursor = db.cursor()
+    cursor.execute("SELECT * FROM users;")
+    logger = get_logger()
+    for item in cursor:
+        mess = f"name={item[0]}; email={item[1]}; phone={item[2]}; " +\
+            f"ssn={item[3]}; password={item[4]};ip={item[5]}; " +\
+            f"last_login={item[6]}; user_agent={item[7]};"
+        mess = filter_datum(list(PII_FIELDS), "***", mess, "; ")
+        logger.info(mess)
+    cursor.close()
+    db.close()
+
+
+if __name__ == "__main__":
+    main()

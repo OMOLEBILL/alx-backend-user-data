@@ -4,8 +4,8 @@ import re
 from typing import List
 
 
-def filter_datum(fields: List[str], reduction: str,
-                 message: str, separotor: str) -> str:
+def filter_datum(fields: List[str], redaction: str,
+                 message: str, separator: str) -> str:
     """We reduct the messages with the given reduction
        args:
             fields : list of strings representing all fields to obfuscate
@@ -18,6 +18,6 @@ def filter_datum(fields: List[str], reduction: str,
             it returns the obfuscated message
     """
     for i in fields:
-        message = re.sub(f'{i}=.*?{separotor}',
-                         f'{i}={reduction}{separotor}', message)
+        message = re.sub(f'{i}=.*?{separator}',
+                         f'{i}={redaction}{separator}', message)
     return message

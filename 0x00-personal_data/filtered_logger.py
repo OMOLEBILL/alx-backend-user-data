@@ -1,9 +1,10 @@
 #!/usr/bin/env python3
 """We implement a simple reduction"""
 import re
+from typing import List
 
 
-def filter_datum(fields: list, reduction: str,
+def filter_datum(fields: List[str], reduction: str,
                  message: str, separotor: str) -> str:
     """We reduct the messages with the given reduction
        args:
@@ -17,8 +18,6 @@ def filter_datum(fields: list, reduction: str,
             it returns the obfuscated message
     """
     for i in fields:
-        message = re.sub(
-            r'\{}{}\=(.*?)\{}'.format(separotor, i, separotor),
-            r'{}{}={}{}'.format(separotor, i, reduction, separotor), message
-        )
+        message = re.sub(f'{i}=.*?{separotor}',
+                         f'{i}={reduction}{separotor}', message)
     return message

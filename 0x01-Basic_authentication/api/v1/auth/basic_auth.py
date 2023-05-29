@@ -3,6 +3,7 @@
 import binascii
 from api.v1.auth.auth import Auth
 import base64
+from typing import Tuple
 
 
 class BasicAuth(Auth):
@@ -34,3 +35,15 @@ class BasicAuth(Auth):
         except (TypeError, binascii.Error):
             return None
         return strb.decode('utf-8')
+
+    def extract_user_credentials(
+            self, decoded_base64_authorization_header: str) -> Tuple[str, str]:
+        """We extract the email from the decoded string"""
+        if decoded_base64_authorization_header is None or \
+                not isinstance(decoded_base64_authorization_header, str):
+            return (None, None)
+        strlist = decoded_base64_authorization_header.split(':')
+        if len(strlist) == 1:
+            return (None, None)
+        else:
+            return (strlist[0], strlist[1])

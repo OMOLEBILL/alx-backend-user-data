@@ -3,10 +3,11 @@
 import binascii
 from api.v1.auth.auth import Auth
 import base64
-from typing import Tuple
+from typing import Tuple, TypeVar
+from models.user import User
 
 
-class BasicAuth(Auth):
+class BasicAuth(Auth, User):
     """This class extends methods from the auth class"""
 
     def extract_base64_authorization_header(
@@ -47,3 +48,22 @@ class BasicAuth(Auth):
             return (None, None)
         else:
             return (strlist[0], strlist[1])
+
+    def user_object_from_credentials(
+            self, user_email: str, user_pwd: str) -> TypeVar('User'):
+        """We retrive the user"""
+        if user_email is None or not isinstance(user_email, str) or\
+           user_pwd is None or not isinstance(user_pwd, str):
+            return None
+        user = User()
+        if user.count() == 0:
+            return None
+        namelist = user.search({"email": user_email})
+        if len(namelist) == 0:
+            return None
+        else:
+            instance = namelist[0]
+        if instance.is_valid_password(user_pwd):
+            return instance
+        else:
+            return None

@@ -33,9 +33,12 @@ class BasicAuth(Auth, User):
             return None
         try:
             strb = base64.b64decode(base64_authorization_header)
-        except (TypeError, binascii.Error):
+        except (TypeError, binascii.Error, UnicodeDecodeError):
             return None
-        return strb.decode('utf-8')
+        try:
+            return strb.decode('utf-8')
+        except (UnicodeDecodeError):
+            return None
 
     def extract_user_credentials(
             self, decoded_base64_authorization_header: str) -> Tuple[str, str]:
@@ -43,7 +46,7 @@ class BasicAuth(Auth, User):
         if decoded_base64_authorization_header is None or \
                 not isinstance(decoded_base64_authorization_header, str):
             return (None, None)
-        strlist = decoded_base64_authorization_header.split(':')
+        strlist = decoded_base64_authorization_header.split(':', 1)
         if len(strlist) == 1:
             return (None, None)
         else:

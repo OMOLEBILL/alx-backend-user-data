@@ -2,6 +2,7 @@
 """This is a basic authenication module """
 from flask import request
 from typing import List, TypeVar
+from re import match
 
 
 class Auth():
@@ -19,10 +20,17 @@ class Auth():
             return True
         if not path.endswith('/'):
             path += '/'
-        if path in excluded_paths:
-            return False
-        else:
-            return True
+        for string in excluded_paths:
+            if string.endswith("*"):
+                pattern = rf"^{string[:-1]}.*$"
+                if match(pattern, path):
+                    return False
+                else:
+                    return True
+            elif path in excluded_paths:
+                return False
+            else:
+                return True
 
     def authorization_header(self, request=None) -> str:
         """We create an authorization error

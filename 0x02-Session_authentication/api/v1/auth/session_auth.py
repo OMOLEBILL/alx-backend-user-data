@@ -19,10 +19,19 @@ class SessionAuth(Auth):
         returns:
             str: the sesion id
         """
-        if user_id is None:
-            return None
-        if not isinstance(user_id, str):
+        if user_id is None and not isinstance(user_id, str):
             return None
         sessionId = str(uuid.uuid4())
         self.user_id_by_session_id[sessionId] = user_id
         return sessionId
+
+    def user_id_for_session_id(self, session_id: str = None) -> str:
+        """We return a user Id based on the session ID
+        args:
+            session_id : the session id linked to te user id
+        returns:
+            str: user_id associated with the session_id
+        """
+        if session_id is None and not isinstance(session_id, str):
+            return None
+        return self.user_id_by_session_id.get(session_id)

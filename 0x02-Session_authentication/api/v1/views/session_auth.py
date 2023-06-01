@@ -34,3 +34,15 @@ def userLogin():
         res = jsonify(instance.to_json())
         res.set_cookie(getenv("SESSION_NAME"), sessionId)
         return res
+
+
+@app_views.route(
+    '/auth_session/logout', methods=['DELETE'], strict_slashes=False)
+def userLogout():
+    """We allow the user to logout"""
+    from api.v1.app import auth
+    decision = auth.destroy_session(request)
+    if decision:
+        return jsonify({}), 200
+    else:
+        abort(404)

@@ -47,3 +47,21 @@ class SessionAuth(Auth):
         sesionid = self.session_cookie(request)
         userid = self.user_id_for_session_id(sesionid)
         return User.get(userid)
+
+    def destroy_session(self, request=None):
+        """we delete a session
+        args:
+            request: localproxy
+        return :
+            nothing
+        """
+        if request is None:
+            return False
+        sessionID = self.session_cookie(request)
+        if not sessionID:
+            return False
+        userid = self.user_id_for_session_id(sessionID)
+        if not userid:
+            return False
+        self.user_id_by_session_id.pop(sessionID)
+        return True

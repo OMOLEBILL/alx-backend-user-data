@@ -2,6 +2,7 @@
 """This module extends the auth module"""
 from api.v1.auth.auth import Auth
 import uuid
+from models.user import User
 
 
 class SessionAuth(Auth):
@@ -35,3 +36,14 @@ class SessionAuth(Auth):
         if session_id is None and not isinstance(session_id, str):
             return None
         return self.user_id_by_session_id.get(session_id)
+
+    def current_user(self, request=None):
+        """we return a user based on the sesion cookie
+            args:
+                request: localproxy
+            returns:
+                a user based on the cookie
+        """
+        sesionid = self.session_cookie(request)
+        userid = self.user_id_for_session_id(sesionid)
+        return User.get(userid)

@@ -3,11 +3,11 @@
    class user and the table Users
 """
 from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy import Table, Null, VARCHAR, Column, Integer, String
-base = declarative_base()
+from sqlalchemy import Column, Integer, String
+Base = declarative_base()
 
 
-class User(base):
+class User(Base):
     """The User model that create the table"""
     __tablename__ = 'users'
 

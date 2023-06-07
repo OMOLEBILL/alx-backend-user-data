@@ -7,6 +7,7 @@ from sqlalchemy.orm import sessionmaker
 from sqlalchemy.orm.session import Session
 from sqlalchemy.exc import InvalidRequestError
 from sqlalchemy.orm.exc import NoResultFound
+from typing import Dict
 
 from user import Base, User
 
@@ -39,7 +40,7 @@ class DB:
         self._session.commit()
         return instance
 
-    def find_user_by(self, **kwargs) -> User:
+    def find_user_by(self, **kwargs: Dict) -> User:
         """We filter the user database"""
         user = self._session.query(User).filter_by(**kwargs).first()
         try:

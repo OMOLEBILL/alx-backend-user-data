@@ -40,12 +40,9 @@ class DB:
         self._session.commit()
         return instance
 
-    def find_user_by(self, **kwargs: Dict) -> User:
+    def find_user_by(self, **kwargs) -> User:
         """We filter the user database"""
         user = self._session.query(User).filter_by(**kwargs).first()
-        try:
-            if user:
-                return user
-            raise NoResultFound
-        except InvalidRequestError:
-            raise InvalidRequestError
+        if user:
+            return user
+        raise NoResultFound

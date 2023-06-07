@@ -23,11 +23,13 @@ class Auth:
     def register_user(self, email: str, password: str) -> User:
         """We register a user if it doesn't exist"""
         hashed_password = _hash_password(password)
+        user = None
         try:
             user = self._db.find_user_by(email=email)
-            if user:
-                mess = f"User {email} already exists"
-                raise ValueError(mess)
-        except NoResultFound:
-            user = self._db.add_user(email, hashed_password)
-        return user
+        except Exception:
+            pass
+        if user and user.email == email:
+            mess = f"User {email} already exists"
+            raise ValueError(mess)
+        else:
+            return self._db.add_user(email, hashed_password)

@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 """We serve the app"""
-from flask import Flask, jsonify, request
+from flask import (Flask, make_response,
+                   jsonify, request, abort)
 from os import getenv
 from auth import Auth
 
@@ -26,6 +27,20 @@ def users():
         except ValueError:
             return jsonify({"message": "email already registered"}), 400
     return jsonify({"email": f"{user.email}", "message": "user created"})
+
+
+@app.route("/sessions", methods=['POST'], strict_slashes=False)
+def login():
+    """We validate the login if sucessful we store it in a cookie"""
+    email = request.form.get("email")
+    password = request.form.get("password")
+    if AUTH.valid_login(email, password):
+        session_id = AUTH.create_session(email)
+        response = jsonify({"email": email, "message": "logged in"})
+        response.set_cookie("session_id", session_id)
+        return response
+    else:
+        abort(401)
 
 
 if __name__ == "__main__":

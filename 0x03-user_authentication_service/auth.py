@@ -48,3 +48,13 @@ class Auth:
         if checkpw(password.encode(), user.hashed_password):
             return True
         return False
+
+    def create_session(self, email: str) -> str:
+        """We create a sessionid from the email"""
+        try:
+            user = self._db.find_user_by(email=email)
+        except Exception:
+            return None
+        sessionId = _generate_uuid()
+        self._db.update_user(user.id, session_id=sessionId)
+        return sessionId

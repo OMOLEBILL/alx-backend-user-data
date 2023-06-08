@@ -4,6 +4,7 @@ from bcrypt import hashpw, gensalt, checkpw
 from db import DB
 from user import User
 from uuid import uuid4
+from typing import Any
 
 
 def _hash_password(password: str) -> bytes:
@@ -49,7 +50,7 @@ class Auth:
             return True
         return False
 
-    def create_session(self, email: str) -> str:
+    def create_session(self, email: str) -> Any:
         """We create a sessionid from the email"""
         try:
             user = self._db.find_user_by(email=email)

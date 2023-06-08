@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """We serve the app"""
-from flask import (Flask, make_response,
+from flask import (Flask, make_response, redirect,
                    jsonify, request, abort)
 from os import getenv
 from auth import Auth
@@ -41,6 +41,18 @@ def login():
         return response
     else:
         abort(401)
+
+
+@app.route("/sessions", methods=['DELETE'], strict_slashes=False)
+def logout():
+    """We logout add redirect"""
+    session_Id = request.cookie.get("session_id")
+    user = AUTH.get_user_from_session_id(session_Id)
+    if user:
+        AUTH.destroy_session(user.id)
+        redirect('/')
+    else:
+        abort(403)
 
 
 if __name__ == "__main__":

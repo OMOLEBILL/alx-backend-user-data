@@ -56,4 +56,3 @@ class DB:
             else:
                 raise ValueError
         self._session.commit()
-        self._session.close()

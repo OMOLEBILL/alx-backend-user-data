@@ -12,6 +12,11 @@ def _hash_password(password: str) -> bytes:
     return hashpw(password.encode(), salt)
 
 
+def _generate_uuid() -> str:
+    """generates a uuid"""
+    return str(uuid4())
+
+
 class Auth:
     """Auth class to interact with the authentication database.
     """
@@ -43,7 +48,3 @@ class Auth:
         if checkpw(password.encode(), user.hashed_password):
             return True
         return False
-
-    def _generate_uuid(self) -> str:
-        """generates a uuid"""
-        return str(uuid4())
